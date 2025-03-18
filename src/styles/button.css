@@ -1,0 +1,23 @@
+
+.btn-danger{
+    font-weight: bold !important;
+    padding: 10px 20px !important;
+    background-color:#FF3131 !important;
+    border: none !important;
+}
+
+.btn-danger:hover{
+   color:#FF3131 !important ;
+   background-color: white !important;
+}
+.btn-light{
+    color: #FF3131 !important;
+     font-weight: bold !important;
+    padding: 10px 20px !important;
+    border: none !important;
+}
+.btn-light:hover{
+    color: #ffffff !important;
+     background-color:#FF3131 !important;
+
+}

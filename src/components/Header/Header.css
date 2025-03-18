@@ -1,0 +1,11 @@
+.active{
+    color:#FF3131 ;
+    text-decoration: none;
+}
+.notActive{
+    color: white;
+    text-decoration: none;
+}
+.notActive:hover{
+       color:#FF3131 ;
+}
