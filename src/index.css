@@ -12,3 +12,118 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none; /* Chrome, Safari, Edge */
   margin: 0;
 }
+
+
+/* jhjhgjhfhjgfhgf */
+/* Movie Banner */
+.movie-banner {
+  background: url("../assets/banner.jpg") center/cover no-repeat;
+  height: 250px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  text-align: center;
+  padding: 30px 0;
+}
+
+.movie-title {
+  font-size: 28px;
+  color: #fff;
+}
+
+/* Date Selection */
+.date-selection {
+  margin: 20px 0;
+  /* overflow-x: auto;
+  white-space: nowrap; */
+}
+
+.scroll-container {
+  display: flex;
+  gap: 10px;
+}
+.no-scale-btn:active, .no-scale-btn:focus {
+  transform: none !important; /* No scaling */
+  box-shadow: none !important; /* Remove focus effect */
+}
+
+
+.date-button {
+  min-width: 80px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+  margin-left: 10px;
+   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.date-button.selected {
+  background: red;
+  color: #fff;
+}
+.half-width {
+  width: 50%; /* Make it take half of the parent's width */
+  margin: 0 auto; /* Center it */
+}
+/* Time Slots */
+.time-slots {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.time-button {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.time-button.active {
+  background: orange;
+  color: white;
+}
+
+/* Seat Layout */
+.seat-layout {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+
+}
+
+.seat-category {
+  text-align: center;
+  margin-bottom: 15px;
+
+}
+
+.seat-button {
+  width: 30px;
+  height: 26px;
+  padding: 0 0 0 0 !important;
+  margin: 5px 0;
+  font-size: 2px;
+  border-radius: 5px;
+  border: none !important;
+}
+
+.selected-seat {
+  background: rgb(196, 14, 5) !important;
+  color: white !important;
+}
+
+/* Confirm Booking Button */
+.confirm-booking {
+  display: block;
+  width: 100%;
+  margin: 20px 0;
+  padding: 10px;
+  font-size: 18px;
+}

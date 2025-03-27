@@ -11,13 +11,11 @@ const MovieDetails = () => {
  const {id} = useParams()
  const role = useSelector((state) => state.auth.role);
  const navigate = useNavigate();
- console.log("My id",id)
   // Fetch movie details from DB
   useEffect(()=>{
     const fetchMovie = async() =>{
       try {
          const response = await api.get(`/movies/${id}`);
-         console.log("My Response ",response.data.movie)
          setMovie(response.data.movie)
       } catch (error) {
         
@@ -26,9 +24,9 @@ const MovieDetails = () => {
     fetchMovie()
   },[id])
 
-  const handleClick = async() => {
+  const handleClick = async(id) => {
     try {
-      navigate('/booking')
+      navigate(`/booking/${id}`)
     } catch (error) {
       
     }
@@ -45,7 +43,7 @@ const MovieDetails = () => {
               className="d-flex align-items-center mx-auto position-relative"
               style={{
                 backgroundImage: `linear-gradient(90deg, #1A1A1A 24.97%, #1A1A1A 38.3%, rgba(26, 26, 26, 0.04) 97.47%, #1A1A1A 100%), 
-                      url(https://assets-in.bmscdn.com/iedb/movies/images/mobile/listing/xxlarge/officer-on-duty-et00431676-1738321341.jpg)`,
+                      url(${movie.bannerImage})`,
                 backgroundSize: "cover",
                 backgroundPosition: "right center",
                 backgroundRepeat: "no-repeat",
@@ -73,7 +71,7 @@ const MovieDetails = () => {
                       objectFit: "cover",
                     }}>
                     <img
-                      src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/thumbnail/xlarge/officer-on-duty-et00431676-1738321341.jpg"
+                      src={movie.posterImage}
                       alt="Movie Poster"
                       style={{
                         height: "392px",
@@ -123,7 +121,6 @@ const MovieDetails = () => {
                     ) : (
                       <span>No Genre Available</span> // Add fallback content
                     )}
-                    {console.log(movie.genre)}
                     <span className="mx-2">|</span>
                     <span>
                       "
@@ -169,7 +166,7 @@ const MovieDetails = () => {
                         <span>No Cast Available</span> // Add a fallback
                       )}
                     </p>
-                    <button className="btn btn-danger mb-5" onClick={handleClick}>Book Now</button>
+                    <button className="btn btn-danger mb-5" onClick={()=>handleClick(movie._id)}>Book Now</button>
                   </div>
                 </Col>
               </Row>

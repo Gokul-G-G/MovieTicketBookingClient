@@ -30,7 +30,6 @@ const Dashboard = () => {
   }, []);
 
   const isClicked = (id) => {
-    console.log("Clicked Movie ID:", id);
     // Navigate to the movie details page or open a modal
     navigate(`/movie-details/${id}`)
     
@@ -81,7 +80,7 @@ const Dashboard = () => {
                   }} // Make it visually clickable
                 >
                   <img
-                    src={movie.posterImage}
+                    src={movie.bannerImage}
                     className="d-block w-100 rounded"
                     alt={movie.title}
                     style={{ height: "500px", objectFit: "cover" }}
@@ -171,7 +170,7 @@ const Dashboard = () => {
                     style={{ height: "250px", objectFit: "cover" }}
                   />
                   <div className="card-body text-center p-2">
-                    <h6 className="card-title text-white text-sm">
+                    <h6 className="card-title text-dark text-sm">
                       {movie.title}
                     </h6>
                     <p className="text-yellow-400 text-xs">⭐ {movie.rating}</p>

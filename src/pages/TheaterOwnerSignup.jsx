@@ -11,7 +11,6 @@ const TheaterOwnerSignup = () => {
     phone: "",
     location: "",
     password: "",
-    seatConfiguration: [],
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +18,6 @@ const TheaterOwnerSignup = () => {
   const [message, setMessage] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  const seatOptions = ["Silver", "Gold", "Platinum"];
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
@@ -33,34 +31,6 @@ const TheaterOwnerSignup = () => {
   // Toggle Password Visibility
   const togglePassword = () => setShowPassword(!showPassword);
 
-  // Handle Seat Configuration Change
-  const handleSeatChange = (index, field, value) => {
-    const updatedSeats = [...formData.seatConfiguration];
-    updatedSeats[index][field] = value;
-    setFormData({ ...formData, seatConfiguration: updatedSeats });
-  };
-
-  // Add a new Seat Configuration Row (Limit to 3)
-  const addSeatConfig = () => {
-    if (formData.seatConfiguration.length < 3) {
-      setFormData({
-        ...formData,
-        seatConfiguration: [
-          ...formData.seatConfiguration,
-          { seatType: "", totalSeats: "", price: "", row: "", seat: "" },
-        ],
-      });
-    }
-  };
-
-  // Remove a Seat Configuration Row
-  const removeSeatConfig = (index) => {
-    const updatedSeats = formData.seatConfiguration.filter(
-      (_, i) => i !== index
-    );
-    setFormData({ ...formData, seatConfiguration: updatedSeats });
-  };
-
   // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,7 +39,7 @@ const TheaterOwnerSignup = () => {
       const response = await api.post("/theaterOwner/signup", formData);
       console.log(response.data);
       alert("Signup successful!");
-         setMessage({
+      setMessage({
         type: "success",
         text: "Signup successful! Redirecting...",
       });
@@ -189,103 +159,6 @@ const TheaterOwnerSignup = () => {
                 </Form.Group>
               </Col>
             </Row>
-
-            <h5 className="text-white">Seat Configuration</h5>
-            {formData.seatConfiguration.map((seat, index) => (
-              <Row key={index} className="mb-2">
-                <Col xs={6} md={2}>
-                  <span className="text-white pb-2">Type</span>
-                  <Form.Select
-                    className="bg-dark text-white border-secondary"
-                    value={seat.seatType}
-                    onChange={(e) =>
-                      handleSeatChange(index, "seatType", e.target.value)
-                    }
-                    required>
-                    <option value="">Select</option>
-                    {seatOptions.map((option) => (
-                      <option
-                        key={option}
-                        value={option}
-                        disabled={formData.seatConfiguration.some(
-                          (seat) => seat.seatType === option
-                        )}>
-                        {option}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Col>
-                <Col xs={6} md={2}>
-                  <span className="text-white pb-2">Seats</span>
-                  <Form.Control
-                    type="number"
-                    placeholder="Total"
-                    value={seat.totalSeats}
-                    className="bg-dark text-white border-secondary"
-                    onChange={(e) =>
-                      handleSeatChange(index, "totalSeats", e.target.value)
-                    }
-                    required
-                  />
-                </Col>
-                <Col xs={6} md={2}>
-                  <span className="text-white pb-2">Price</span>
-                  <Form.Control
-                    type="number"
-                    placeholder="Price"
-                    value={seat.price}
-                    className="bg-dark text-white border-secondary"
-                    onChange={(e) =>
-                      handleSeatChange(index, "price", e.target.value)
-                    }
-                    required
-                  />
-                </Col>
-                <Col xs={6} md={2}>
-                  <span className="text-white pb-2">Rows</span>
-                  <Form.Control
-                    type="number"
-                    placeholder="Rows"
-                    value={seat.row}
-                    className="bg-dark text-white border-secondary"
-                    onChange={(e) =>
-                      handleSeatChange(index, "row", e.target.value)
-                    }
-                    required
-                  />
-                </Col>
-                <Col xs={6} md={2}>
-                  <span className="text-white pb-2">Colums</span>
-                  <Form.Control
-                    type="number"
-                    placeholder="colums"
-                    value={seat.seat}
-                    className="bg-dark text-white border-secondary"
-                    onChange={(e) =>
-                      handleSeatChange(index, "seat", e.target.value)
-                    }
-                    required
-                  />
-                </Col>
-                <Col xs={6} md={2}>
-                  <span className="text-white pb-2">Remove</span>
-                  <Button
-                    variant="danger"
-                    onClick={() => removeSeatConfig(index)}>
-                    X
-                  </Button>
-                </Col>
-              </Row>
-            ))}
-
-            {formData.seatConfiguration.length < 3 && (
-              <Button
-                className="w-100 mt-2 btn-secondary"
-                onClick={addSeatConfig}>
-                + Add Seat Type
-              </Button>
-            )}
-
             <Button type="submit" className="w-100 mt-3 btn-danger">
               Register
             </Button>

@@ -1,25 +1,40 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FaHome, FaUser, FaSignOutAlt } from "react-icons/fa";
-import { Offcanvas, Button } from "react-bootstrap"; // Bootstrap components
-import axios from "axios"; // For API request
+import {
+  FaHome,
+  FaUser,
+  FaSignOutAlt,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
+import { Offcanvas, Button, Collapse } from "react-bootstrap"; // Import Collapse for dropdowns
+import axios from "axios";
 
 const Header = ({ role }) => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const navigate = useNavigate(); // Redirect function
+  const [openDropdowns, setOpenDropdowns] = useState({}); // Store dropdown states
+  const navigate = useNavigate();
 
   // Logout Function
   const handleLogout = async () => {
     try {
-      await axios.get(`/api/${role}/logout`, { withCredentials: true }); // Logout API call
-      localStorage.removeItem("token"); // Remove token (if stored in localStorage)
-      navigate("/login"); // Redirect to login page
+      await axios.get(`/api/${role}/logout`, { withCredentials: true });
+      localStorage.removeItem("token");
+      navigate("/login");
     } catch (error) {
       console.error("Logout failed", error);
     }
   };
 
-  // Menu options based on role
+  // Toggle dropdown menu for submenu items
+  const toggleDropdown = (menuName) => {
+    setOpenDropdowns((prev) => ({
+      ...prev,
+      [menuName]: !prev[menuName],
+    }));
+  };
+
+  // Define menu options
   const getMenuOptions = () => {
     switch (role) {
       case "user":
@@ -29,15 +44,69 @@ const Header = ({ role }) => {
         ];
       case "theaterOwner":
         return [
-          { path: "/profile", name: "My Profile" },
-          { path: "/manage-theaters", name: "Manage Theaters" },
-          { path: "/manage-shows", name: "Manage Shows" },
+          {
+            name: "Profile Management",
+            icon: ' ',
+            subMenu: [
+              { name: "Edit Profile", path: "/profile/edit" },
+              { name: "Change Password", path: "/profile/password-change" },
+            ],
+          },
+          {
+            name: "Theater Management",
+            icon: "",
+            path: "/manage-theaters",
+          },
+          {
+            name: "Show Management",
+            icon: "",
+            subMenu: [
+              { name: "Add Show", path: "/manage-shows/add" },
+              { name: "Edit Show", path: "/manage-shows/edit" },
+              { name: "Delete Show", path: "/manage-shows/delete" },
+            ],
+          },
         ];
       case "admin":
         return [
-          { path: "/profile", name: "Admin Panel" },
-          { path: "/manage-users", name: "Manage Users" },
-          { path: "/manage-theaters", name: "Manage Theaters" },
+          {
+            name: "My Profile",
+            path: "/admin-profile",
+            icon: "",
+          },
+          {
+            name: "Movies Management",
+            icon: "",
+            subMenu: [
+              { name: "Add Movie", path: "/manage-movies/add" },
+              { name: "Edit Movie", path: "/manage-movies/edit" },
+              { name: "Delete Movie", path: "/manage-movies/delete" },
+            ],
+          },
+          {
+            name: "Theater Management",
+            icon: " ",
+            subMenu: [
+              { name: "View Theaters", path: "/manage-theaters/view" },
+              { name: "Verify Theaters", path: "/manage-theaters/verify" },
+            ],
+          },
+          {
+            name: "User Management",
+            icon: "",
+            subMenu: [
+              { name: "View Users", path: "/manage-users/view" },
+            ],
+          },
+          {
+            name: "Bookings & Revenue Reports",
+            icon: "",
+            subMenu: [
+              { name: "View Bookings", path: "/bookings-reports/bookings" },
+              { name: "Revenue Insights", path: "/bookings-reports/revenue" },
+            ],
+          },
+          { name: "Notifications", icon: " ", path: "/notifications" },
         ];
       default:
         return [];
@@ -55,7 +124,7 @@ const Header = ({ role }) => {
           left: 0,
           width: "100%",
           zIndex: 1000,
-          height: "80px", 
+          height: "80px",
         }}>
         <h1 className="fw-bold m-0 text-danger">
           STAR<span className="text-light">LIGHT</span>
@@ -90,28 +159,63 @@ const Header = ({ role }) => {
         </nav>
       </header>
 
-      {/* Bootstrap Offcanvas Sidebar */}
+      {/* Sidebar Offcanvas */}
       <Offcanvas
         show={showSidebar}
         onHide={() => setShowSidebar(false)}
         placement="end"
         className="bg-dark text-white">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>{role} Menu</Offcanvas.Title>
+          <Offcanvas.Title style={{textTransform:"uppercase"}}>{role} Menu</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <ul className="list-unstyled">
             {getMenuOptions().map((item, index) => (
               <li key={index} className="mb-3">
-                <NavLink
-                  to={item.path}
-                  className="text-white text-decoration-none"
-                  onClick={() => setShowSidebar(false)}>
-                  {item.name}
-                </NavLink>
+                {/* If the item has a submenu, add a collapsible section */}
+                {item.subMenu ? (
+                  <>
+                    <Button
+                      variant="link"
+                      className="text-danger text-decoration-none w-100 text-start d-flex justify-content-between"
+                      style={{ fontWeight: "bold" }}
+                      onClick={() => toggleDropdown(item.name)}>
+                      <span>
+                        {item.icon} {item.name}
+                      </span>
+                      {openDropdowns[item.name] ? (
+                        <FaChevronUp />
+                      ) : (
+                        <FaChevronDown />
+                      )}
+                    </Button>
+                    <Collapse in={openDropdowns[item.name]}>
+                      <ul className="list-unstyled ps-3">
+                        {item.subMenu.map((subItem, subIndex) => (
+                          <li key={subIndex} className="mb-2">
+                            <NavLink
+                              to={subItem.path}
+                              className="text-white text-decoration-none"
+                              onClick={() => setShowSidebar(false)}>
+                              {subItem.name}
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </Collapse>
+                  </>
+                ) : (
+                  <NavLink
+                    to={item.path}
+                    className="d-flex align-items-center gap-2 px-3 py-2 w-100 text-danger text-decoration-none "
+                    style={{ fontWeight: "bold" }}
+                    onClick={() => setShowSidebar(false)}>
+                    {item.icon} {item.name}
+                  </NavLink>
+                )}
               </li>
             ))}
-            {/* Logout in Sidebar */}
+            {/* Logout Button */}
             <li className="mt-4">
               <Button variant="danger" className="w-100" onClick={handleLogout}>
                 Logout

@@ -61,9 +61,6 @@ const Login = () => {
        { email: inputValue, password: password },
        { withCredentials: true }
      );
-
-     console.log("Login Success:", response.data);
-
      const { user, role } = response.data;
 
      dispatch(loginSuccess({ user, role })); // Store user & role in Redux
