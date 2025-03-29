@@ -102,6 +102,7 @@ const AdminNotifications = () => {
                     ) : (
                       <Button
                         variant="success"
+                        style={{marginTop:"10px"}}
                         onClick={() =>
                           handleAction(
                             notif.ownerId._id,
@@ -114,7 +115,7 @@ const AdminNotifications = () => {
                     )}
                     <Button
                       variant="warning"
-                      style={{ color: "white", marginTop: "10px" }}
+                      style={{ color: "white", marginTop: "10px", marginLeft:"10px" }}
                       onClick={() =>
                         handleAction(notif.ownerId._id, notif._id, "isRejected")
                       }>

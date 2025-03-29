@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Button, Form, Alert, Spinner } from "react-bootstrap";
+import { Card, Button, Form, Alert, Spinner,CloseButton } from "react-bootstrap";
 import api from "../../api/axiosInstance";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -48,6 +48,10 @@ const ChangePassword = () => {
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-dark">
       <Card className="shadow-lg p-4" style={{ width: "25rem" }}>
+        <CloseButton
+          className="position-absolute top-0 end-0 m-2"
+          onClick={() => navigate("/dashboard")}
+        />
         <Card.Body>
           <Card.Title className="text-center mb-3">Change Password</Card.Title>
 
