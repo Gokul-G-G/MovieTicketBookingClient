@@ -8,7 +8,7 @@ import {
   FaChevronUp,
 } from "react-icons/fa";
 import { Offcanvas, Button, Collapse } from "react-bootstrap"; // Import Collapse for dropdowns
-import axios from "axios";
+import api from "../../api/axiosInstance";
 
 const Header = ({ role }) => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -18,7 +18,7 @@ const Header = ({ role }) => {
   // Logout Function
   const handleLogout = async () => {
     try {
-      await axios.get(`/api/${role}/logout`, { withCredentials: true });
+      await api.post(`/${role}/logout`, { withCredentials: true });
       localStorage.removeItem("token");
       navigate("/login");
     } catch (error) {
