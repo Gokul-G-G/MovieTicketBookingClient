@@ -1,6 +1,6 @@
 import React from 'react'
 import backgroundImage from '../../assets/bg.jpg'
-import Logo from '../../assets/Logo.png'
+import Logo from '../../assets/logo.png'
 import { useNavigate } from "react-router-dom";
 import '../../styles/button.css'
 const Introduction = () => {
