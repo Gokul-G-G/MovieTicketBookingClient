@@ -4,8 +4,8 @@ import api from "../../api/axiosInstance";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-const TheaterOwnerProfile = () => {
-  const [owner, setOwner] = useState(null);
+const UserProfile = () => {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -13,23 +13,18 @@ const TheaterOwnerProfile = () => {
     name: "",
     phone: "",
     profilePic: "",
-    theaterName: "",
-    location: "",
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchOwnerProfile = async () => {
+    const fetchUserProfile = async () => {
       try {
-        const response = await api.get("/theaterOwner/profile");
-        // console.log("Theater Owner Profile:", response.data);
-        setOwner(response.data.data);
+        const response = await api.get("/user/profile");
+        setUser(response.data.data);
         setFormData({
           name: response.data.data.name || "",
           phone: response.data.data.phone || "",
           profilePic: response.data.data.profilePic || "",
-          theaterName: response.data.data.theaterName || "",
-          location: response.data.data.location || "",
         });
       } catch (err) {
         setError("Failed to load profile");
@@ -38,7 +33,7 @@ const TheaterOwnerProfile = () => {
       }
     };
 
-    fetchOwnerProfile();
+    fetchUserProfile();
   }, []);
 
   const handleInputChange = (e) => {
@@ -63,56 +58,48 @@ const TheaterOwnerProfile = () => {
 
     if (confirm.isConfirmed) {
       try {
-        const response = await api.put("/theaterOwner/profile-deactivate");
-
+        const response = await api.put("/user/profile-deactivate");
         if (response.status === 200) {
           Swal.fire(
             "Deactivated!",
             "Your profile has been deactivated.",
             "success"
           );
-          setOwner({ ...owner, isActive: false }); // Update UI after deactivation
+          setUser({ ...user, isActive: false });
         }
       } catch (error) {
-        // console.error("Deactivation Error:", error);
         Swal.fire("Error!", "Failed to deactivate profile", "error");
       }
     }
   };
-
 
   const handleUpdate = async () => {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("name", formData.name);
       formDataToSend.append("phone", formData.phone);
-      formDataToSend.append("location", formData.location);
       if (formData.profilePic && formData.profilePic instanceof File) {
         formDataToSend.append("profilePic", formData.profilePic);
       }
 
-      const response = await api.put(
-        "/theaterOwner/profile-edit",
-        formDataToSend,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await api.put("/user/profile-edit", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.status === 200) {
-        setOwner(response.data.data);
+        setUser(response.data.data);
         setShowModal(false);
         Swal.fire("Success!", "Profile updated successfully!", "success");
       }
     } catch (error) {
-      console.error("Update Error:", error);
       Swal.fire("Error!", "Failed to update profile", "error");
     }
   };
 
   const handleBack = () => {
-    navigate("/dashboard"); 
+    navigate("/dashboard");
   };
+
   if (loading)
     return <Spinner animation="border" className="d-block mx-auto mt-5" />;
   if (error) return <Alert variant="danger">{error}</Alert>;
@@ -122,18 +109,16 @@ const TheaterOwnerProfile = () => {
       <Card className="shadow p-4" style={{ width: "25rem" }}>
         <Card.Img
           variant="top"
-          src={owner?.profilePic}
+          src={user?.profilePic || "/default-avatar.png"}
           className="rounded-circle mx-auto d-block"
           style={{ width: "120px", height: "120px", objectFit: "cover" }}
         />
         <Card.Body className="text-center">
-          <Card.Title>{owner?.name || "Owner Name"}</Card.Title>
+          <Card.Title>{user?.name || "User Name"}</Card.Title>
           <Card.Subtitle className="mb-2 text-muted">
-            {owner?.email || "owner@example.com"}
+            {user?.email || "user@example.com"}
           </Card.Subtitle>
-          <Card.Text>📞 {owner?.phone || "+91 9876543210"}</Card.Text>
-          <Card.Text>🎭 Theater: {owner?.name || "Your Theater"}</Card.Text>
-          <Card.Text>📍 Location: {owner?.location || "City, State"}</Card.Text>
+          <Card.Text>📞 {user?.phone || "+91 9876543210"}</Card.Text>
           <Button variant="primary" onClick={() => setShowModal(true)}>
             Edit Profile
           </Button>
@@ -144,8 +129,7 @@ const TheaterOwnerProfile = () => {
         <Button
           variant="outline-danger"
           className="mt-3 w-100"
-          onClick={handleDeactivate}
-        >
+          onClick={handleDeactivate}>
           Deactivate Profile
         </Button>
       </Card>
@@ -176,17 +160,7 @@ const TheaterOwnerProfile = () => {
                 onChange={handleInputChange}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Change Theater Location</Form.Label>
-              <Form.Control
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
 
-            {/* Display Current Profile Picture */}
             <Form.Group className="mb-3 text-center">
               <Form.Label>Current Profile Picture</Form.Label>
               {formData.profilePic &&
@@ -225,4 +199,4 @@ const TheaterOwnerProfile = () => {
   );
 };
 
-export default TheaterOwnerProfile;
+export default UserProfile;

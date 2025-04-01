@@ -131,9 +131,9 @@ const addSeatConfig = () => {
    })),
  };
 
-   console.log("Data Before Sending",showData)
+  //  console.log("Data Before Sending",showData)
     try {
-      console.log("Role====",role)
+      // console.log("Role====",role)
       await api.post(`/${role}/showtimes`,showData);
       alert("Show added successfully!");
       setShowModal(false);

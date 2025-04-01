@@ -1,16 +1,15 @@
 import React from 'react'
 import AppRoutes from './routes/AppRoutes'
-import MovieDetails from './pages/MovieDetails'
-import SeatingBooking from './pages/SeatingBooking'
+import { ToastContainer } from 'react-toastify'
 
 
 const App = () => {
   return (
     <div>
+      <ToastContainer position="top-right" autoClose={3000} />
       <AppRoutes />
-   
     </div>
-  )
+  );
 }
 
 export default App

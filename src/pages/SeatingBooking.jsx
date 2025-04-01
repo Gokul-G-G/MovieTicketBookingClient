@@ -9,11 +9,14 @@ import {
   FormGroup,
   FormLabel,
   FormControl,
+  Spinner,
 } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import { FreeMode } from "swiper/modules";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const SeatingBooking = () => {
   const { id } = useParams();
@@ -26,6 +29,9 @@ const SeatingBooking = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
   const [price, setPrice] = useState([]);
+  const [isBooking, setIsBooking] = useState(false);
+
+  const navigate= useNavigate()
 
   useEffect(() => {
     const fetchShowDetails = async () => {
@@ -37,8 +43,8 @@ const SeatingBooking = () => {
 
           const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
           setSelectedDate(today + "T00:00:00.000Z");
-          console.log("Shows Fetched:", response.data.shows);
-          console.log("Selected Date:", selectedDate);
+          // console.log("Shows Fetched:", response.data.shows);
+          // console.log("Selected Date:", selectedDate);
         }
       } catch (error) {
         console.error("Error fetching show details:", error);
@@ -50,14 +56,14 @@ const SeatingBooking = () => {
   // Filter shows based on selectedDate & selectedTimeSlot
   useEffect(() => {
     if (!selectedDate || shows.length === 0) return;
-    console.log("Date===", shows[0].dates);
+    // console.log("Date===", shows[0].dates);
     const filteredByDate = shows.filter((show) => {
       if (Array.isArray(show.dates) && show.dates.length > 0) {
         return show.dates.some((dateObj) => dateObj.date === selectedDate);
       }
     });
 
-    console.log("Filtered Date:", filteredByDate);
+    // console.log("Filtered Date:", filteredByDate);
 
     setFilteredShows(filteredByDate);
     setPrice([]);
@@ -82,7 +88,7 @@ const SeatingBooking = () => {
         )
       ),
     ];
-    console.log("Available time slots:", extractedTimeSlots);
+    // console.log("Available time slots:", extractedTimeSlots);
 
     if (extractedTimeSlots.length > 0) {
       setSelectedTimeSlot({ time: extractedTimeSlots[0] }); // Auto-select the first time slot
@@ -97,7 +103,7 @@ const SeatingBooking = () => {
     )
       return;
 
-    console.log("Filtering for time slot:", selectedTimeSlot);
+    // console.log("Filtering for time slot:", selectedTimeSlot);
 
     const filteredByTime = filteredShows.filter((show) =>
       show.dates.some((dateObj) =>
@@ -105,7 +111,7 @@ const SeatingBooking = () => {
       )
     );
 
-    console.log("Shows for selected time slot:", filteredByTime);
+    // console.log("Shows for selected time slot:", filteredByTime);
 
     setSelectedShow(filteredByTime.length > 0 ? filteredByTime[0] : null);
     setSelectedSeats([]); // ✅ Reset selected seats when switching time slot
@@ -119,7 +125,7 @@ const SeatingBooking = () => {
         dateObj.timeSlots.some((slot) => slot.time === time)
       )
     );
-    console.log("Selected Show for Time Slot:", matchingShow);
+    // console.log("Selected Show for Time Slot:", matchingShow);
     setSelectedShow(matchingShow || null);
     setPrice([]);
     setSelectedSeats([]); // ✅ Reset seat selection when changing time slot
@@ -179,7 +185,7 @@ const SeatingBooking = () => {
       !selectedShow.theaterId ||
       selectedSeats.length === 0
     ) {
-      alert("Please select seats before booking.");
+      toast.error("Please select seats before booking.");
       return;
     }
 
@@ -188,7 +194,7 @@ const SeatingBooking = () => {
 
     // ✅ Extract only the time slot value
     if (!selectedTimeSlot || !selectedTimeSlot.time) {
-      alert("Please select a valid time slot.");
+      toast.error("Please select a valid time slot.");
       return;
     }
 
@@ -203,10 +209,11 @@ const SeatingBooking = () => {
       ...new Set(selectedSeats.map((seat) => seat?.seatType)),
     ];
     if (uniqueSeatTypes.length > 1) {
-      alert("Please select seats of the same type.");
+      toast.error("Please select seats of the same type.");
       return;
     }
     const seatType = uniqueSeatTypes[0];
+    setIsBooking(true);
     console.log("selected time==", selectedTime);
     try {
       const response = await api.post("/user/booked", {
@@ -218,9 +225,10 @@ const SeatingBooking = () => {
         timeSlot: selectedTime, // ✅ Sending only time value
       });
 
-      console.log("Response==", response.data);
+      // console.log("Response==", response.data);
       if (response.data) {
-        alert("Booking successful!");
+        toast.success("Re Directed to the payment page...");
+        setIsBooking(false);
         // ✅ Update seat state to disable booked seats
         setSelectedShow((prevShow) => ({
           ...prevShow,
@@ -252,14 +260,20 @@ const SeatingBooking = () => {
               : date
           ),
         }));
-
+         const bookingId = response.data.booking._id;
+        //  console.log("Booking Id ==",bookingId)
         setSelectedSeats([]); // ✅ Clear selection after booking
+        setTimeout(() => {
+           navigate(`/payment/${bookingId}`);
+        }, 2000);
       } else {
         alert("Booking failed. Try again.");
+        setIsBooking(false);
       }
     } catch (error) {
-      console.error("Error booking seats:", error.response?.data || error);
+      // console.error("Error booking seats:", error.response?.data || error);
       alert(error.response?.data?.message || "Error booking seats.");
+      setIsBooking(false); 
     }
   };
   const totalPrice = price.reduce((sum, p) => sum + p, 0);
@@ -451,7 +465,7 @@ const SeatingBooking = () => {
            <p className="d-flex align-items-center"></p>
         </div>// For Pricing Display */}
 
-      {console.log("Price===", price)}
+      {/* {console.log("Price===", price)} */}
       <div
         className="d-flex justify-content-around align-items-center  mt-5"
         style={{ backgroundColor: "rgba(254, 197, 26, 0.96)" }}>
@@ -467,10 +481,17 @@ const SeatingBooking = () => {
         <div>
           {" "}
           <Button
-            variant="danger"
-            disabled={selectedSeats.length === 0}
-            onClick={handleBooking}>
-            Book Now
+            variant="success"
+            disabled={isBooking || selectedSeats.length === 0}
+            onClick={handleBooking}
+            className="mt-4">
+            {isBooking ? (
+              <>
+                <Spinner animation="border" size="sm" /> Booking...
+              </>
+            ) : (
+              `Book ${selectedSeats.length} Seats - ₹${totalPrice}`
+            )}
           </Button>
         </div>
       </div>

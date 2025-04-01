@@ -53,11 +53,6 @@ const Header = ({ role }) => {
             ],
           },
           {
-            name: "Theater Management",
-            icon: "",
-            path: "/manage-theaters",
-          },
-          {
             name: "Show Management",
             icon: "",
             subMenu: [

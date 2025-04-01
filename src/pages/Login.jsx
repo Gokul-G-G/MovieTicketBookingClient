@@ -61,8 +61,8 @@ const Login = () => {
        { email: inputValue, password: password },
        { withCredentials: true }
      );
-     const { user, role } = response.data;
-
+     const { user, role , token } = response.data;
+    localStorage.setItem("token", token);
      dispatch(loginSuccess({ user, role })); // Store user & role in Redux
 
      setLoginError(""); // Clear errors

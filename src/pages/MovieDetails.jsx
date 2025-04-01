@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import Header from "../components/Header/Header";
 import starIcon from "../../src/assets/star.png";
 import api from "../api/axiosInstance";
@@ -7,30 +7,37 @@ import { useNavigate, useParams } from "react-router";
 import { useSelector } from "react-redux";
 
 const MovieDetails = () => {
- const [movie,setMovie] = useState({})
- const {id} = useParams()
- const role = useSelector((state) => state.auth.role);
- const navigate = useNavigate();
-  // Fetch movie details from DB
-  useEffect(()=>{
-    const fetchMovie = async() =>{
-      try {
-         const response = await api.get(`/movies/${id}`);
-         setMovie(response.data.movie)
-      } catch (error) {
-        
-      }
-    }
-    fetchMovie()
-  },[id])
+  const [movie, setMovie] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { id } = useParams();
+  const role = useSelector((state) => state.auth.role);
+  const navigate = useNavigate();
 
-  const handleClick = async(id) => {
+  // Fetch movie details from DB
+  useEffect(() => {
+    const fetchMovie = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/movies/${id}`);
+        setMovie(response.data.movie);
+      } catch (error) {
+        setError("Failed to load movie details. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMovie();
+  }, [id]);
+
+  const handleClick = async (id) => {
     try {
-      navigate(`/booking/${id}`)
+      navigate(`/booking/${id}`);
     } catch (error) {
-      
+      setError("Failed to navigate to booking page.");
     }
-  }
+  };
+
   return (
     <div className="bg-dark vh-100 w-100" style={{ paddingTop: "60px" }}>
       <div className="w-100">
@@ -166,7 +173,11 @@ const MovieDetails = () => {
                         <span>No Cast Available</span> // Add a fallback
                       )}
                     </p>
-                    <button className="btn btn-danger mb-5" onClick={()=>handleClick(movie._id)}>Book Now</button>
+                    <button
+                      className="btn btn-danger mb-5"
+                      onClick={() => handleClick(movie._id)}>
+                      Book Now
+                    </button>
                   </div>
                 </Col>
               </Row>
@@ -174,6 +185,18 @@ const MovieDetails = () => {
           </section>
         </div>
       </div>
+
+      {/* Loading & Error Handling */}
+      {loading && (
+        <div className="d-flex justify-content-center align-items-center">
+          <Spinner animation="border" variant="light" />
+        </div>
+      )}
+      {error && (
+        <Alert variant="danger" className="mt-3">
+          {error}
+        </Alert>
+      )}
     </div>
   );
 };

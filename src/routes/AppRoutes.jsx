@@ -19,6 +19,12 @@ import Users from '../pages/admin/Users';
 import AdminProfile from '../pages/admin/AdminProfile';
 import TheaterOwnerProfile from '../pages/theaterOwner/TheaterOwnerProfile';
 import ChangePassword from '../pages/theaterOwner/ChangePassword';
+import Success from '../pages/Success';
+import Payment from '../pages/Payment';
+import MyProfile from '../pages/user/MyProfile';
+import MyBookings from '../pages/user/MyBookings';
+import EditShow from '../pages/theaterOwner/EditShow';
+import DeleteShow from '../pages/theaterOwner/DeleteShow';
 const AppRoutes = () => {
   return (
     <div>
@@ -84,8 +90,32 @@ const AppRoutes = () => {
             element={<ProtectedRoute element={<TheaterOwnerProfile />} />}
           />
           <Route
+            path="/profile"
+            element={<ProtectedRoute element={<MyProfile />} />}
+          />
+          <Route
             path="/profile/password-change"
             element={<ProtectedRoute element={<ChangePassword />} />}
+          />
+          <Route
+            path="/payment/:id"
+            element={<ProtectedRoute element={<Payment />} />}
+          />
+          <Route
+            path="/success/:id"
+            element={<ProtectedRoute element={<Success />} />}
+          />
+          <Route
+            path="/bookings"
+            element={<ProtectedRoute element={<MyBookings />} />}
+          />
+          <Route
+            path="/manage-shows/edit"
+            element={<ProtectedRoute element={<EditShow />} />}
+          />
+          <Route
+            path="/manage-shows/delete"
+            element={<ProtectedRoute element={<DeleteShow />} />}
           />
         </Routes>
       </Router>

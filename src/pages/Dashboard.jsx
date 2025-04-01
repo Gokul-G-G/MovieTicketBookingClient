@@ -5,18 +5,23 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import {  useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 
 const Dashboard = () => {
+  // State to store movies data
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-   const navigate = useNavigate();
-   const role = useSelector((state) => state.auth.role);
+
+  const navigate = useNavigate();
+  // Get user role from Redux store
+  const role = useSelector((state) => state.auth.role);
+
   useEffect(() => {
     const fetchMovies = async () => {
       try {
+        // Fetch movies based on user role
         const response = await api.get(`/${role}/movies`);
         setMovies(response.data.movies);
       } catch (err) {
@@ -27,20 +32,21 @@ const Dashboard = () => {
     };
 
     fetchMovies();
-  }, []);
+  }, []); // Run effect only once after component mounts
 
+  // Function to handle movie click and navigate to details page
   const isClicked = (id) => {
-    // Navigate to the movie details page or open a modal
-    navigate(`/movie-details/${id}`)
-    
+    navigate(`/movie-details/${id}`);
   };
 
   return (
-    <div className="bg-black text-white min-h-screen p-4" style={{paddingTop:"60px"}}>
-      {/* Header */}
+    <div
+      className="bg-black text-white min-h-screen p-4"
+      style={{ paddingTop: "60px" }}>
+      {/* Header Component */}
       <Header role={role} />
 
-      {/* Bootstrap Carousel (Featured Movies) */}
+      {/* Featured Movies Section */}
       <div className="mb-5">
         {loading ? (
           <p className="text-center text-gray-400">
@@ -73,12 +79,11 @@ const Dashboard = () => {
                 <div
                   key={movie._id}
                   className={`carousel-item ${index === 0 ? "active" : ""}`}
-                  onClick={(e) => {
+                  onClick={() => {
                     if (window.innerWidth < 768) {
                       isClicked(movie._id);
                     }
-                  }} // Make it visually clickable
-                >
+                  }}>
                   <img
                     src={movie.bannerImage}
                     className="d-block w-100 rounded"
@@ -94,7 +99,7 @@ const Dashboard = () => {
                     <button
                       className="btn btn-danger mt-2"
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent triggering the div click
+                        e.stopPropagation(); // Prevent triggering the parent div click
                         isClicked(movie._id);
                       }}>
                       Watch Now
@@ -104,7 +109,7 @@ const Dashboard = () => {
               ))}
             </div>
 
-            {/* Carousel Controls */}
+            {/* Carousel Navigation Controls */}
             <button
               className="carousel-control-prev"
               type="button"
@@ -131,7 +136,7 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Now Playing Section with Swiper */}
+      {/* Now Playing Movies Section */}
       <div className="mt-6">
         <h2 className="home-title text-lg font-semibold">Now Playing</h2>
         <p className="home-sub-title text-gray-400 text-sm">

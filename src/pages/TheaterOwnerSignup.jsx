@@ -37,7 +37,7 @@ const TheaterOwnerSignup = () => {
     setMessage(null);
     try {
       const response = await api.post("/theaterOwner/signup", formData);
-      console.log(response.data);
+      // console.log(response.data);
       alert("Signup successful!");
       setMessage({
         type: "success",
@@ -48,7 +48,7 @@ const TheaterOwnerSignup = () => {
         window.location.href = "/login"; // Redirect after success
       }, 2000);
     } catch (error) {
-      console.error("Signup Error:", error.response?.data || error.message);
+      // console.error("Signup Error:", error.response?.data || error.message);
       setMessage("Signup failed. Please fill all the fields");
     }
   };
