@@ -146,14 +146,14 @@ const SeatingBooking = () => {
     selectedTime,
     price
   ) => {
-    console.log(
-      "Seat Id, Label, and Type:",
-      seatId,
-      seatLabel,
-      seatType,
-      selectedTime,
-      price
-    );
+    // console.log(
+    //   "Seat Id, Label, and Type:",
+    //   seatId,
+    //   seatLabel,
+    //   seatType,
+    //   selectedTime,
+    //   price
+    // );
 
     setSelectedTime(selectedTime);
 
@@ -214,7 +214,7 @@ const SeatingBooking = () => {
     }
     const seatType = uniqueSeatTypes[0];
     setIsBooking(true);
-    console.log("selected time==", selectedTime);
+    // console.log("selected time==", selectedTime);
     try {
       const response = await api.post("/user/booked", {
         showId: selectedShow._id,

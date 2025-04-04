@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import api from "../api/axiosInstance";
 import html2canvas from "html2canvas"; // Import html2canvas
 
@@ -8,7 +8,7 @@ const Success = () => {
   const { id } = useParams();
   const [bookingData, setBookingData] = useState(null);
   const ticketRef = useRef(null); // Reference to ticket for screenshot
-
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
@@ -34,6 +34,9 @@ const Success = () => {
       link.href = image;
       link.download = `ticket_${bookingData._id}.png`;
       link.click();
+      setTimeout(() => {
+        navigate("/dashboard"); // Navigate to dashboard
+      }, 2000);
     } catch (error) {
       console.error("Error generating ticket image:", error);
     }
@@ -60,6 +63,7 @@ const Success = () => {
               alt="Movie Poster"
               className="img-fluid rounded"
               style={{ width: "100%", maxHeight: "250px", objectFit: "cover" }}
+              
             />
           </div>
 

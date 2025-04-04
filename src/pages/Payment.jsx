@@ -44,15 +44,15 @@ const Payment = () => {
       setLoading(true);
       const bookingId = booking._id;
       const amount = booking.totalAmount;
-    //   console.log("Booking Id==",bookingId)
-    //   console.log("Amount==",amount)
+      // console.log("Booking Id==",bookingId)
+      // console.log("Amount==",amount)
 
       const { data } = await api.post("/payment/create-order", {
         amount,
         bookingId,
       });
 
-    //   console.log("Payment Data", data);
+      //  console.log("Payment Data", data);
       if (data.success) {
         handlePayment(data.order, bookingId);
       } else {
@@ -120,36 +120,36 @@ const Payment = () => {
   };
 
   // ✅ Simulated Payment Success
-  const simulatePaymentSuccess = async () => {
-    try {
-      setLoading(true);
-      const mockResponse = {
-        razorpay_order_id: "order_demo_123",
-        razorpay_payment_id: "payment_demo_123",
-        razorpay_signature: "signature_demo_123",
-      };
-    //    console.log("Booking Id==", booking._id);
-      const verifyResponse = await api.post("/payment/verify-payment", {
-        ...mockResponse,
-        bookingId: booking._id,
-      });
-    //   console.log("Message",verifyResponse)
-      if (
-        verifyResponse.data.message === "Demo Payment verified successfully!"
-      ) {
-        alert("✅ Demo Payment Successful!");
-        navigate(`/success/${booking._id}`);
-      } else {
-        alert("Demo Payment verification failed!");
-      }
+  // const simulatePaymentSuccess = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const mockResponse = {
+  //       razorpay_order_id: "order_demo_123",
+  //       razorpay_payment_id: "payment_demo_123",
+  //       razorpay_signature: "signature_demo_123",
+  //     };
+  //   //    console.log("Booking Id==", booking._id);
+  //     const verifyResponse = await api.post("/payment/verify-payment", {
+  //       ...mockResponse,
+  //       bookingId: booking._id,
+  //     });
+  //   //   console.log("Message",verifyResponse)
+  //     if (
+  //       verifyResponse.data.message === "Demo Payment verified successfully!"
+  //     ) {
+  //       alert("✅ Demo Payment Successful!");
+  //       navigate(`/success/${booking._id}`);
+  //     } else {
+  //       alert("Demo Payment verification failed!");
+  //     }
 
-      setLoading(false);
-    } catch (error) {
-    //   console.error("Demo Payment verification failed:", error);
-      alert("Demo Payment verification failed!");
-      setLoading(false);
-    }
-  };
+  //     setLoading(false);
+  //   } catch (error) {
+  //   //   console.error("Demo Payment verification failed:", error);
+  //     alert("Demo Payment verification failed!");
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-dark">
@@ -183,14 +183,14 @@ const Payment = () => {
             </Button>
 
             {/* ✅ Demo Payment Button */}
-            <Button
+            {/* <Button
               onClick={simulatePaymentSuccess}
               disabled={loading}
               variant="outline-primary"
               size="lg"
               className="w-100 mt-3">
               {loading ? "Processing..." : "Demo Payment Success"}
-            </Button>
+            </Button> */}
           </div>
         </Card.Body>
       </Card>
