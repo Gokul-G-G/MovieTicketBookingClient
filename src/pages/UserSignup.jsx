@@ -9,7 +9,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { FaEye, FaEyeSlash, FaFacebook, FaGoogle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/bg.jpg";
 import api from "../api/axiosInstance";
 
@@ -28,6 +28,7 @@ const UserSignup = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -83,7 +84,7 @@ const UserSignup = () => {
       });
 
       setTimeout(() => {
-        window.location.href = "/login"; // Redirect after success
+       navigate('/login') // Redirect after success
       }, 2000);
     } catch (error) {
       setMessage({
