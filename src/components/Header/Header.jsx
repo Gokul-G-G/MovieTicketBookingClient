@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   FaHome,
@@ -6,6 +6,8 @@ import {
   FaSignOutAlt,
   FaChevronDown,
   FaChevronUp,
+  FaSun,
+  FaMoon,
 } from "react-icons/fa";
 import { Offcanvas, Button, Collapse } from "react-bootstrap"; // Import Collapse for dropdowns
 import api from "../../api/axiosInstance";
@@ -14,6 +16,16 @@ const Header = ({ role }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState({}); // Store dropdown states
   const navigate = useNavigate();
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
 
   // Logout Function
   const handleLogout = async () => {
@@ -112,7 +124,9 @@ const Header = ({ role }) => {
     <>
       {/* Header */}
       <header
-        className="bg-dark text-white p-3 d-flex justify-content-between align-items-center"
+        className={`p-3 d-flex justify-content-between align-items-center ${
+          theme === "dark" ? "bg-dark text-white" : "bg-light text-dark"
+        }`}
         style={{
           position: "fixed",
           top: 0,
@@ -121,14 +135,35 @@ const Header = ({ role }) => {
           zIndex: 1000,
           height: "80px",
         }}>
-        <h1 className="fw-bold m-0 text-danger">
-          STAR<span className="text-light">LIGHT</span>
+        <h1
+          className={`fw-bold m-0 ${
+            theme === "dark" ? "text-danger" : "text-dark"
+          }`}>
+          STAR
+          <span className={theme === "dark" ? "text-light" : "text-danger"}>
+            LIGHT
+          </span>
         </h1>
+
         <nav>
           <ul className="d-flex gap-3 list-unstyled m-0 align-items-center">
+            <li>
+              <Button
+                variant="link"
+                className={
+                  theme === "dark" ? "text-white p-0" : "text-dark p-0"
+                }
+                onClick={toggleTheme}
+                title="Toggle Theme">
+                {theme === "dark" ? <FaSun size={20} /> : <FaMoon size={20} />}
+              </Button>
+            </li>
+
             {/* Home Link */}
             <li>
-              <NavLink to="/dashboard" className="text-white">
+              <NavLink
+                to="/dashboard"
+                className={theme === "dark" ? "text-white" : "text-dark"}>
                 <FaHome size={20} />
               </NavLink>
             </li>
@@ -136,7 +171,9 @@ const Header = ({ role }) => {
             <li>
               <Button
                 variant="link"
-                className="text-white p-0"
+                className={
+                  theme === "dark" ? "text-white p-0" : "text-dark p-0"
+                }
                 onClick={() => setShowSidebar(true)}>
                 <FaUser size={20} />
               </Button>
@@ -145,7 +182,9 @@ const Header = ({ role }) => {
             <li>
               <Button
                 variant="link"
-                className="text-white p-0"
+                className={
+                  theme === "dark" ? "text-white p-0" : "text-dark p-0"
+                }
                 onClick={handleLogout}>
                 <FaSignOutAlt size={20} />
               </Button>
@@ -159,9 +198,13 @@ const Header = ({ role }) => {
         show={showSidebar}
         onHide={() => setShowSidebar(false)}
         placement="end"
-        className="bg-dark text-white">
+        className={
+          theme === "dark" ? "bg-dark text-white" : "bg-light text-dark"
+        }>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title style={{textTransform:"uppercase"}}>{role} Menu</Offcanvas.Title>
+          <Offcanvas.Title style={{ textTransform: "uppercase" }}>
+            {role} Menu
+          </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <ul className="list-unstyled">
@@ -172,18 +215,19 @@ const Header = ({ role }) => {
                   <>
                     <Button
                       variant="link"
-                      className="text-danger text-decoration-none w-100 text-start d-flex justify-content-between"
+                      className={`text-decoration-none w-100 text-start d-flex justify-content-between ${
+                        theme === "dark" ? "text-danger" : "text-dark"
+                      }`}
                       style={{ fontWeight: "bold" }}
                       onClick={() => toggleDropdown(item.name)}>
-                      <span>
-                        {item.icon} {item.name}
-                      </span>
+                      <span>{item.name}</span>
                       {openDropdowns[item.name] ? (
                         <FaChevronUp />
                       ) : (
                         <FaChevronDown />
                       )}
                     </Button>
+
                     <Collapse in={openDropdowns[item.name]}>
                       <ul className="list-unstyled ps-3">
                         {item.subMenu.map((subItem, subIndex) => (
