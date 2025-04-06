@@ -137,8 +137,8 @@ const Login = () => {
 
             {loginError && <p className="text-danger">{loginError}</p>}
 
-             <Button 
-              variant="danger" 
+            <Button
+              variant="danger"
               className="w-100"
               onClick={handleLogin}
               disabled={loading}>
@@ -163,6 +163,14 @@ const Login = () => {
                 Sign Up Here
               </Link>
             </p>
+            {loginError && (
+              <p className="text-white">
+                Forgot your password?{" "}
+                <Link to="/forgot-password" className="text-danger fw-bold">
+                  Reset it here
+                </Link>
+              </p>
+            )}
           </Form>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getNavigate } from "../utils/NavigateHelper";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -32,12 +33,15 @@ api.interceptors.response.use(
       error.response?.data?.message || "Something went wrong";
 
     if (status === 401) {
-      toast.error("Session expired! Redirecting to login...");
+      toast.error("Session expired!");
       sessionStorage.removeItem("token");
       localStorage.removeItem("token");
-      setTimeout(() => {
-        window.location.href = "/login"; // Redirect after 2s
-      }, 2000);
+      const navigate = getNavigate()
+
+       if (navigate) {
+    setTimeout(() => {
+      navigate("/login"); // ✅ No full reload now!
+    }, 2000);}
     } else if (status === 500) {
       toast.error("Server Error! Please try again later.");
     } else {

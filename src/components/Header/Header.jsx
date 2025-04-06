@@ -105,15 +105,15 @@ const Header = ({ role }) => {
               { name: "View Users", path: "/manage-users/view" },
             ],
           },
-          {
-            name: "Bookings & Revenue Reports",
-            icon: "",
-            subMenu: [
-              { name: "View Bookings", path: "/bookings-reports/bookings" },
-              { name: "Revenue Insights", path: "/bookings-reports/revenue" },
-            ],
-          },
-          { name: "Notifications", icon: " ", path: "/notifications" },
+          // {
+          //   name: "Bookings & Revenue Reports",
+          //   icon: "",
+          //   subMenu: [
+          //     { name: "View Bookings", path: "/bookings-reports/bookings" },
+          //     { name: "Revenue Insights", path: "/bookings-reports/revenue" },
+          //   ],
+          // },
+          // { name: "Notifications", icon: " ", path: "/notifications" },
         ];
       default:
         return [];
