@@ -25,9 +25,13 @@ const MyBookings = () => {
     fetchBookings();
   }, []);
 
-  const handleViewTicket = (bookingId) => {
-    navigate(`/success/${bookingId}`);
-  };
+ const handleViewTicket = (booking) => {
+   if (booking.paymentStatus.toLowerCase() === "paid") {
+     navigate(`/success/${booking._id}`);
+   } else {
+     alert("Ticket not available. Payment not completed.");
+   }
+ };
     const handleBackToDashboard = () => {
       navigate("/dashboard");
     };
@@ -40,15 +44,13 @@ const MyBookings = () => {
 
   return (
     <div className="container mt-4">
-  {/* Back to Dashboard Button & Heading */}
-  <div className="d-flex justify-content-between align-items-center mb-3">
-    <Button variant="secondary" onClick={handleBackToDashboard}>
-      Back to Dashboard
-    </Button>
-    <h2 className="text-center flex-grow-1 mb-0">My Bookings</h2>
-  </div>
-
-
+      {/* Back to Dashboard Button & Heading */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <Button variant="secondary" onClick={handleBackToDashboard}>
+          Back to Dashboard
+        </Button>
+        <h2 className="text-center flex-grow-1 mb-0">My Bookings</h2>
+      </div>
 
       <Table striped bordered hover responsive>
         <thead className="bg-dark text-light">
@@ -84,7 +86,8 @@ const MyBookings = () => {
                 <Button
                   variant="info"
                   size="sm"
-                  onClick={() => handleViewTicket(booking._id)}>
+                  onClick={() => handleViewTicket(booking)}
+                  disabled={booking.paymentStatus.toLowerCase() !== "paid"}>
                   View Ticket
                 </Button>
               </td>

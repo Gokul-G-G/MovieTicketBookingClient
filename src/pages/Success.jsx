@@ -49,8 +49,15 @@ const Success = () => {
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-black">
       <Card
-        className="p-3 rounded shadow-lg"
+        className="p-3 rounded shadow-lg position-relative"
         style={{ maxWidth: "700px", width: "100%" }}>
+        <Button
+          variant="outline-secondary"
+          size="sm"
+          className="position-absolute top-0 end-0 m-2"
+          onClick={() => navigate("/dashboard")}>
+          Back to Home
+        </Button>
         <div
           ref={ticketRef}
           className="row g-3 align-items-center bg-white p-3 rounded">
@@ -63,7 +70,6 @@ const Success = () => {
               alt="Movie Poster"
               className="img-fluid rounded"
               style={{ width: "100%", maxHeight: "250px", objectFit: "cover" }}
-              
             />
           </div>
 
