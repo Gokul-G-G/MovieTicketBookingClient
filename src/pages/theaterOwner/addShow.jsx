@@ -15,6 +15,7 @@ const AddShow = () => {
   const [movies, setMovies] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     screen: "",
     startDate: "",
@@ -134,7 +135,8 @@ const addSeatConfig = () => {
   //  console.log("Data Before Sending",showData)
     try {
       // console.log("Role====",role)
-      await api.post(`/${role}/showtimes`,showData);
+      setLoading(true); // Start loading
+      await api.post(`/${role}/showtimes`, showData);
       alert("Show added successfully!");
       setShowModal(false);
       setFormData({
@@ -146,6 +148,8 @@ const addSeatConfig = () => {
       });
     } catch (error) {
       console.error("Error adding show", error);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -326,8 +330,8 @@ const addSeatConfig = () => {
             <Button
               type="submit"
               className="w-100 mt-3 btn-primary"
-              onClick={handleSubmit}>
-              Add Show
+              disabled={loading}>
+              {loading ? "Adding Show..." : "Add Show"}
             </Button>
           </Form>
         </Modal.Body>
