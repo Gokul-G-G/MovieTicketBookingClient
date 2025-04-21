@@ -3,6 +3,7 @@ import { Form, Button, Row, Col, InputGroup } from "react-bootstrap";
 import api from "../api/axiosInstance";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import backgroundImage from "../assets/bg.jpg";
+import { useNavigate } from "react-router";
 
 const TheaterOwnerSignup = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ const TheaterOwnerSignup = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const navigate = useNavigate
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -45,7 +47,7 @@ const TheaterOwnerSignup = () => {
       });
 
       setTimeout(() => {
-        window.location.href = "/login"; // Redirect after success
+        navigate("/login"); // Redirect after success
       }, 2000);
     } catch (error) {
       // console.error("Signup Error:", error.response?.data || error.message);
