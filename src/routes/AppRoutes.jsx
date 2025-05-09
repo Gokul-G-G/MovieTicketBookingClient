@@ -23,7 +23,7 @@ import Success from '../pages/Success';
 import Payment from '../pages/Payment';
 import MyProfile from '../pages/user/MyProfile';
 import MyBookings from '../pages/user/MyBookings';
-import EditShow from '../pages/theaterOwner/EditShow';
+import EditShow from '../pages/theaterOwner/TheaterEditShows';
 import DeleteShow from '../pages/theaterOwner/DeleteShow';
 import ForgotPassword from '../pages/ForgotPassword';
 // import ViewBookings from '../pages/admin/ViewBookings';

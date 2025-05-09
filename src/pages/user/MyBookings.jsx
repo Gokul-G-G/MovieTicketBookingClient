@@ -26,7 +26,7 @@ const MyBookings = () => {
   }, []);
 
  const handleViewTicket = (booking) => {
-   if (booking.paymentStatus.toLowerCase() === "paid") {
+   if (booking.paymentStatus.toLowerCase() === "success") {
      navigate(`/success/${booking._id}`);
    } else {
      alert("Ticket not available. Payment not completed.");
@@ -75,7 +75,7 @@ const MyBookings = () => {
               <td>
                 <span
                   className={`badge bg-${
-                    booking.paymentStatus.toLowerCase() === "paid"
+                    booking.paymentStatus.toLowerCase() === "success"
                       ? "success"
                       : "danger"
                   }`}>
@@ -87,7 +87,7 @@ const MyBookings = () => {
                   variant="info"
                   size="sm"
                   onClick={() => handleViewTicket(booking)}
-                  disabled={booking.paymentStatus.toLowerCase() !== "paid"}>
+                  disabled={booking.paymentStatus.toLowerCase() !== "success"}>
                   View Ticket
                 </Button>
               </td>

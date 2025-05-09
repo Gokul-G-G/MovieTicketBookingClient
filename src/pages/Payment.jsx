@@ -88,19 +88,20 @@ const Payment = () => {
             ...response,
             bookingId,
           });
-
+          console.log("Verify Response=",verifyResponse)
           if (
-            verifyResponse.data.message === "Payment verified successfully!"
+            verifyResponse.data.message ===
+            "Payment verified & seats confirmed!"
           ) {
             alert("Payment Successful!");
-             navigate(`/success/${bookingId}`);
+            navigate(`/success/${bookingId}`);
           } else {
             alert("Payment verification failed!");
           }
 
           setLoading(false);
         } catch (error) {
-        //   console.error("Payment verification failed:", error);
+          console.error("Payment verification failed:", error);
           alert("Payment verification failed!");
           setLoading(false);
         }
